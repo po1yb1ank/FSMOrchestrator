@@ -1,7 +1,7 @@
 package endpoint
 
 import (
-	"encoding/json"
+	json "github.com/json-iterator/go"
 	"net/http"
 )
 
