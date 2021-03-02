@@ -10,13 +10,13 @@ import (
 func main() {
 	s := server.Server{
 		Cfg: config.Cfg{
-			Port: "8080",
+			Port:   "8080",
 			Remote: "someserver.yo",
 		},
 	}
 	wg := sync.WaitGroup{}
 	wg.Add(1)
-	if err := s.Start(); err != nil{
+	if err := s.Start(); err != nil {
 		log.Fatal(err)
 	}
 	wg.Wait()

@@ -12,21 +12,23 @@ import (
 type Server struct {
 	Cfg config.Cfg
 }
-func(s *Server)Start() error{
+
+func (s *Server) Start() error {
 
 	fsm.InitMachine()
+	log.Println("FSM init: done")
 	endpoint.RemotePath = s.Cfg.Remote
-
+	log.Println("Set remote to:", s.Cfg.Remote)
 	r := mux.NewRouter()
 
-	r.HandleFunc("/request",endpoint.RequestHandler).Methods("POST")
+	r.HandleFunc("/request", endpoint.RequestHandler).Methods("POST")
 	log.Println("Listening on:", s.Cfg.Port)
-	if err := http.ListenAndServe(":"+s.Cfg.Port, r); err != nil{
+	if err := http.ListenAndServe(":"+s.Cfg.Port, r); err != nil {
 		return err
 	}
 
 	return nil
 }
-func(s *Server)GetRemote() string{
+func (s *Server) GetRemote() string {
 	return s.Cfg.Remote
 }

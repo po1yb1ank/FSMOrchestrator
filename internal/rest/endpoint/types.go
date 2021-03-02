@@ -1,8 +1,8 @@
 package endpoint
 
 type Machine struct {
-	Mode 	string `json:"mode"`
-	Offset 	Offset `json:"offset"`
+	Mode    string `json:"mode"`
+	Offset  Offset `json:"offset"`
 	Control string `json:"control"`
 }
 
