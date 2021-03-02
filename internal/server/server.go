@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gorilla/mux"
 	"github.com/po1yb1ank/FSMOrchestrator/config"
+	"github.com/po1yb1ank/FSMOrchestrator/internal/fsm"
 	"github.com/po1yb1ank/FSMOrchestrator/internal/rest/endpoint"
 	"log"
 	"net/http"
@@ -13,6 +14,7 @@ type Server struct {
 }
 func(s *Server)Start() error{
 
+	fsm.InitMachine()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/request",endpoint.RequestHandler).Methods("POST")
