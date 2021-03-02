@@ -15,6 +15,8 @@ type Server struct {
 func(s *Server)Start() error{
 
 	fsm.InitMachine()
+	endpoint.RemotePath = s.Cfg.Remote
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/request",endpoint.RequestHandler).Methods("POST")
@@ -24,4 +26,7 @@ func(s *Server)Start() error{
 	}
 
 	return nil
+}
+func(s *Server)GetRemote() string{
+	return s.Cfg.Remote
 }

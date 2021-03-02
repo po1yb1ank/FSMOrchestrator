@@ -16,6 +16,13 @@ func RequestHandler(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	ch <- m
-	fsm.PushMachine(ch)
-
+	switch fsm.PushMachine(ch) {
+	case true:
+		_, err := http.Post(RemotePath, "application/json",r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadGateway)
+			return
+		}
+	case false:
+	}
 }

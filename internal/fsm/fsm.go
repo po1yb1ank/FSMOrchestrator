@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 var machine *fsm.FSM
-func ProcessMachine(state endpoint.Machine) (result bool){
+func ProcessMachine(state endpoint.Machine) bool{
 	event := eventBuilder(state)
 	err := machine.Event(event)
 	if err != nil {
@@ -15,9 +15,9 @@ func ProcessMachine(state endpoint.Machine) (result bool){
 	return true
 }
 
-func PushMachine(ch chan endpoint.Machine){
+func PushMachine(ch chan endpoint.Machine)bool{
 	current := <- ch
-	ProcessMachine(current)
+	return ProcessMachine(current)
 }
 
 func InitMachine(){
