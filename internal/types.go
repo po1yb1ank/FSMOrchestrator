@@ -1,4 +1,4 @@
-package endpoint
+package internal
 
 type Machine struct {
 	Mode    string `json:"mode"`
@@ -9,7 +9,6 @@ type Machine struct {
 type Offset struct {
 	X string `json:"x"`
 	Y string `json:"y"`
-	Z string `json:"z"`
 }
 
 var RemotePath string

@@ -11,7 +11,7 @@ func main() {
 	s := server.Server{
 		Cfg: config.Cfg{
 			Port:   "8080",
-			Remote: "someserver.yo",
+			Remote: "http://ce80dce81eb0.ngrok.io",
 		},
 	}
 	wg := sync.WaitGroup{}

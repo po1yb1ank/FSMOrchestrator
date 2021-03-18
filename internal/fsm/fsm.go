@@ -2,14 +2,14 @@ package fsm
 
 import (
 	"github.com/looplab/fsm"
-	"github.com/po1yb1ank/FSMOrchestrator/internal/rest/endpoint"
+	"github.com/po1yb1ank/FSMOrchestrator/internal"
 	"log"
 	"strings"
 )
 
 var machine *fsm.FSM
 
-func ProcessMachine(state endpoint.Machine) bool {
+func ProcessMachine(state internal.Machine) bool {
 	event := eventBuilder(state)
 	log.Println("got event:", event)
 	err := machine.Event(event)
@@ -21,7 +21,7 @@ func ProcessMachine(state endpoint.Machine) bool {
 	return true
 }
 
-func PushMachine(ch chan endpoint.Machine) bool {
+func PushMachine(ch chan internal.Machine) bool {
 	current := <-ch
 	return ProcessMachine(current)
 }
@@ -30,27 +30,27 @@ func InitMachine() {
 	machine = fsm.NewFSM(
 		"MANUAL;IDLE",
 		fsm.Events{
-			{Name: "AUTO;IDLE", Src: []string{"AUTO;STOP"}, Dst: "AUTO;STOP"},
-			{Name: "AUTO;IDLE", Src: []string{"MANUAL;IDLE"}, Dst: "MANUAL;IDLE"},
+			{Name: "AUTO;IDLE", Src: []string{"AUTO;STOP"}, Dst: "AUTO;IDLE"},
+			{Name: "AUTO;IDLE", Src: []string{"MANUAL;IDLE"}, Dst: "AUTO;IDLE"},
 
-			{Name: "AUTO;CONTINUE", Src: []string{"AUTO;PAUSE"}, Dst: "AUTO;PAUSE"},
+			{Name: "AUTO;CONTINUE", Src: []string{"AUTO;PAUSE"}, Dst: "AUTO;CONTINUE"},
 
-			{Name: "AUTO;PAUSE", Src: []string{"AUTO;IDLE"}, Dst: "AUTO;IDLE"},
-			{Name: "AUTO;PAUSE", Src: []string{"AUTO;CONTINUE"}, Dst: "AUTO;CONTINUE"},
+			{Name: "AUTO;PAUSE", Src: []string{"AUTO;IDLE"}, Dst: "AUTO;PAUSE"},
+			{Name: "AUTO;PAUSE", Src: []string{"AUTO;CONTINUE"}, Dst: "AUTO;PAUSE"},
 
-			{Name: "AUTO;STOP", Src: []string{"AUTO;IDLE"}, Dst: "AUTO;IDLE"},
-			{Name: "AUTO;STOP", Src: []string{"AUTO;CONTINUE"}, Dst: "AUTO;CONTINUE"},
-			{Name: "AUTO;STOP", Src: []string{"AUTO;PAUSE"}, Dst: "AUTO;PAUSE"},
+			{Name: "AUTO;STOP", Src: []string{"AUTO;IDLE"}, Dst: "AUTO;STOP"},
+			{Name: "AUTO;STOP", Src: []string{"AUTO;CONTINUE"}, Dst: "AUTO;STOP"},
+			{Name: "AUTO;STOP", Src: []string{"AUTO;PAUSE"}, Dst: "AUTO;STOP"},
 
-			{Name: "MANUAL;IDLE", Src: []string{"AUTO;IDLE"}, Dst: "AUTO;IDLE"},
-			{Name: "MANUAL;IDLE", Src: []string{"AUTO;CONTINUE"}, Dst: "AUTO;CONTINUE"},
-			{Name: "MANUAL;IDLE", Src: []string{"AUTO;PAUSE"}, Dst: "AUTO;PAUSE"},
-			{Name: "MANUAL;IDLE", Src: []string{"AUTO;STOP"}, Dst: "AUTO;STOP"},
+			{Name: "MANUAL;IDLE", Src: []string{"AUTO;IDLE"}, Dst: "MANUAL;IDLE"},
+			{Name: "MANUAL;IDLE", Src: []string{"AUTO;CONTINUE"}, Dst: "MANUAL;IDLE"},
+			{Name: "MANUAL;IDLE", Src: []string{"AUTO;PAUSE"}, Dst: "MANUAL;IDLE"},
+			{Name: "MANUAL;IDLE", Src: []string{"AUTO;STOP"}, Dst: "MANUAL;IDLE"},
 			{Name: "MANUAL;IDLE", Src: []string{"MANUAL;IDLE"}, Dst: "MANUAL;IDLE"},
 		},
 		fsm.Callbacks{},
 	)
 }
-func eventBuilder(state endpoint.Machine) string {
+func eventBuilder(state internal.Machine) string {
 	return strings.Join([]string{strings.ToUpper(state.Mode), strings.ToUpper(state.Control)}, ";")
 }
